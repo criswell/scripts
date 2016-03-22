@@ -39,7 +39,7 @@ process()
     local FB=${F%.*}
     if [ -f "$FB" ]; then
       local MD5SUM=$(md5sum $FB | cut -d " " -f 1 -)
-      local CHECK_MD%=$(cat $F)
+      local CHECK_MD=$(cat $F)
       if [ "$MD5SUM" != "$CHECK_MD" ]; then
         MD5_MISMATCH+=($FB)
       fi
