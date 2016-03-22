@@ -30,6 +30,12 @@ EOF
 
 if [ -n "$1" ]; then
   ROOT_PATH=$1
+  if [ -d "$ROOT_PATH" ]; then
+    echo
+  else
+    echo "Error! $ROOT_PATH does not exist!"
+    usage
+  fi
 else
   echo "Usage error! Missing root path!"
   usage
