@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+usage()
+{
+    cat <<EOF
+
+Usage: $PROGNAME ROOT_PATH
+Where ROOT_PATH is the path to check.
+
+$PROGNAME will spider its way through ROOT_PATH looking for *.md5 and *.md5sum
+files. It wil then compare them to similarly named files in the same directory.
+
+This program expects files and their MDS5 checksums to be of the following
+pattern:
+
+   file.foo.bar
+   file.foo.bar.md5
+
+or:
+
+   file.foo.bar
+   file.foo.nar.md5sum
+
+Will output a list of files which do not match their MD5 checksums, as well as
+a list of any MD5 checksum files without matching files.
+
+If no output, then you can assume there were no problems.
+EOF
+}
+
+if [ -n "$1" ]; then
+  ROOT_PATH=$1
+else
+  echo "Usage error! Missing root path!"
+  usage
+fi
