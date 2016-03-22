@@ -28,6 +28,19 @@ If no output, then you can assume there were no problems.
 EOF
 }
 
+process()
+{
+  local RPATH=$1
+  local EXT=$2
+  declare -a PROBLEMS
+
+  for F in $(find $RPATH -iname "*.${EXT}"); do
+    local FB=${F%.*}
+    echo $FB
+  done
+
+}
+
 if [ -n "$1" ]; then
   ROOT_PATH=$1
   if [ -d "$ROOT_PATH" ]; then
