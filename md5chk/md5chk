@@ -32,20 +32,43 @@ process()
 {
   local RPATH=$1
   local EXT=$2
-  declare -a PROBLEMS
+  local MD5_MISMATCH=()
+  local FILENOTFOUND=()
 
   for F in $(find $RPATH -iname "*.${EXT}"); do
     local FB=${F%.*}
-    echo $FB
+    if [ -f "$FB" ]; then
+      local MD5SUM=$(md5sum $FB | cut -d " " -f 1 -)
+      local CHECK_MD%=$(cat $F)
+      if [ "$MD5SUM" != "$CHECK_MD" ]; then
+        MD5_MISMATCH+=($FB)
+      fi
+    else
+      FILENOTFOUND+=($F)
+    fi
   done
 
+  # Now display errors
+  if [ ${#MD5_MISMATCH[@]} -ne 0 ]; then
+    echo ">>> THE FOLLOWING FILES HAD MISMATCHING MD5 CHECKSUMS!"
+    for F in $MD5_MISMATCH; do
+      echo $F
+    done
+  fi
+
+  if [ ${#FILENOTFOUND[@]} -ne 0 ]; then
+    echo ">>> THE FOLLOWING MD5 CHECKSUMS LACKED MATCHING FILES!"
+    for F in $FILENOTFOUND; do
+      echo $F
+    done
+  fi
 }
 
 if [ -n "$1" ]; then
   ROOT_PATH=$1
   if [ -d "$ROOT_PATH" ]; then
-    # First do .md5
     process $ROOT_PATH "md5"
+    process $ROOT_PATH "md5sum"
   else
     echo "Error! $ROOT_PATH does not exist!"
     usage
