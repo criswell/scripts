@@ -44,7 +44,8 @@ process()
 if [ -n "$1" ]; then
   ROOT_PATH=$1
   if [ -d "$ROOT_PATH" ]; then
-    echo
+    # First do .md5
+    process $ROOT_PATH "md5"
   else
     echo "Error! $ROOT_PATH does not exist!"
     usage
