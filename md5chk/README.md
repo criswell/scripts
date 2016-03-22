@@ -2,7 +2,7 @@
 
 This script will run through a directory tree containing files with MD5
 checksums and compare them to their respective files. It will report on errors
-it find.
+it finds.
 
 If there is no problem with the files, there will be no output.
 
