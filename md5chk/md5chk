@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PROGNAME=${0##*/}
+
 usage()
 {
     cat <<EOF
