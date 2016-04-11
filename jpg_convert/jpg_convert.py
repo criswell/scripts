@@ -14,4 +14,5 @@ dest_dir = os.path.abspath(sys.argv[2])
 
 for dir_name, sub_dirs, files in os.walk(source_dir):
     for fname in files:
-        print("{0}/{1}".format(dir_name, fname))
+        fn = os.path.relpath("{0}/{1}".fornat(dir_name, fname), source_dir)
+        print(fn)
