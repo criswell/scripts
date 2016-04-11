@@ -23,4 +23,5 @@ dest_dir = os.path.abspath(sys.argv[2])
 for dir_name, sub_dirs, files in os.walk(source_dir):
     for fname in files:
         fn = os.path.relpath("{0}/{1}".format(dir_name, fname), source_dir)
-        print(os.path.basename(fn))
+        (local_dir, local_file) = os.path.split(fn)
+        print(local_dir)
