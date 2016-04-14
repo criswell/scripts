@@ -29,7 +29,8 @@ for dir_name, sub_dirs, files in os.walk(source_dir):
         target_file = os.path.join(target_dir, local_file)
         source_file = os.path.join(source_dir, fn)
         mkdir_p(target_dir)
-        command = "jpegtran -progressive {0} -outfile {1}".format(source_file, target_file)
+        command = "jpegtran -progressive --outfile {0} {1}".format(target_file,
+                source_file)
         try:
             out = subprocess.check_output(command.split(' '))
         except:
