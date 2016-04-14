@@ -3,6 +3,7 @@
 from __future__ import print_function
 import os
 import sys
+import subprocess
 import errno
 
 if len(sys.argv) != 3:
@@ -26,4 +27,5 @@ for dir_name, sub_dirs, files in os.walk(source_dir):
         (local_dir, local_file) = os.path.split(fn)
         target_dir = os.path.join(dest_dir, local_dir)
         target_file = os.path.join(target_dir, local_file)
-        print(target_file)
+        #mkdir_p(target_dir)
+        print("jpegtran -progressive {0} > {1}".format(fn, target_file))
