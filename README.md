@@ -11,3 +11,4 @@ in the COPYING file.
 
 * [md5chk](md5chk/)
 * [ip_addr](ip_addr)
+* [jpg_convert](jpg_convert)
