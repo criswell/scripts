@@ -32,5 +32,5 @@ for dir_name, sub_dirs, files in os.walk(source_dir):
         command = "jpegtran -progressive {0} > {1}".format(source_file, target_file)
         try:
             out = subprocess.check_output(command.split(' '))
-        except(subprocess.CalledProcessError, FileNotFoundError):
+        except:
             print("ERROR RUNNING COMMAND:\n\t{0}".format(command))
