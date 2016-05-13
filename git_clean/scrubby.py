@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env python
+
+from __future__ import print_function
 
 # First cleanup merged branches
 MERGED=`git branch -r --merged | grep -v HEAD`
