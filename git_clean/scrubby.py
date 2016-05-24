@@ -1,26 +1,72 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import subprocess
+import csv
+import json
+try:
+    from shlex import quote
+except ImportError:
+    from pipes import quote
+
+def exec_cmd(cmd):
+    #print(cmd)
+    try:
+        output = subprocess.check_output(cmd, shell=True)
+        lines = output.split('\n')
+        lines = [l.strip() for l in lines]
+    except subprocess.CalledProcessError:
+         return None
+
+    if lines[-1] == '':
+        lines.pop()
+    return lines
+
+def delete_branch(branch):
+    # There's so many ways this can go wrong, FML
+    r = exec_cmd('git checkout {0}'.format(quote(branch)))
+    if r is None:
+        return (False, 'checkout')
+    r = exec_cmd('git push origin --delete {0} --dry-run'.format(
+        quote(branch)))
+    if r is None:
+        return (False, 'delete')
+    return (True, None)
 
 # First cleanup merged branches
-MERGED=`git branch -r --merged | grep -v HEAD`
+m = exec_cmd('git branch -r --merged | grep -v HEAD')
 
-MERGED_DETAILS=$(
-for branch in $MERGED; do
-  echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch
-done
-)
+merged = {}
 
-for branch in $MERGED_DETAILS; do
-  echo $branch
-done
+for i in m:
+    details = exec_cmd(
+            'git show --format="%ct %H \'%an\'" {0} | head -n 1'.format(quote(i)))
+    dlow = [row for row in csv.reader(details, delimiter=' ', quotechar="'")]
+    if len(dlow) != 1:
+        # ARGH, WTF, YO!
+        print("argh! {0}".format(i))
+    else:
+        merged[dlow[0][1]] = {
+                'branch' : i,
+                'date' : dlow[0][0],
+                'user' : dlow[0][2]
+        }
 
-echo
-echo "The above branches have been merged, but are not deleted. They should be"
-echo -n "safe to delete. Delete? (Y/n) "
+print(json.dumps(merged, indent=4))
 
-read -n 1 c
+deleted_branches = []
+problem_branches = []
+for b in merged:
+    r = delete_branch(b)
+    if r[0]:
+        deleted_branches.append(merged[b])
+    else:
+        problem_branches.append({
+            'problem' : r[1],
+            'details' : merged[b]})
 
-if [ "$c" == "n" ]; do
-  echo "NO!"
-done
+print(json.dumps({
+    'deleted_branches' : deleted_branches,
+    'problem_branches' : problem_branches
+    }))
+
