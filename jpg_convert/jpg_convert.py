@@ -11,12 +11,14 @@ if len(sys.argv) != 3:
     print("jpg_convert.py source/dir dest/dir")
     sys.exit(1)
 
+
 def mkdir_p(path):
     try:
         os.makedirs(path)
     except OSError as exc:
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
+
 
 source_dir = os.path.abspath(sys.argv[1])
 dest_dir = os.path.abspath(sys.argv[2])
@@ -29,9 +31,10 @@ for dir_name, sub_dirs, files in os.walk(source_dir):
         target_file = os.path.join(target_dir, local_file)
         source_file = os.path.join(source_dir, fn)
         mkdir_p(target_dir)
-        command = "jpegtran -progressive -outfile {0} {1}".format(target_file,
-                source_file)
+        command = "jpegtran -progressive -outfile {0} {1}".format(
+                target_file, source_file)
+        print(command)
         try:
             out = subprocess.check_output(command.split(' '))
-        except:
+        except Exception:
             print("ERROR RUNNING COMMAND:\n\t{0}".format(command))
